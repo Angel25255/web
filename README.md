@@ -75,6 +75,7 @@ try {
             background-color: var(--white);
             color: var(--dark-color);
             line-height: 1.6;
+            padding-bottom: 70px; /* Espacio para la barra inferior móvil */
         }
         
         /* Header Styles */
@@ -508,6 +509,44 @@ try {
             cursor: pointer;
         }
         
+        /* Mobile Bottom Navigation */
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-top: 1px solid var(--border-color);
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .mobile-nav-items {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+        
+        .mobile-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--gray-color);
+            font-size: 10px;
+            flex: 1;
+        }
+        
+        .mobile-nav-item i {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+        
+        .mobile-nav-item.active {
+            color: var(--primary-color);
+        }
+        
         /* Responsive Styles */
         @media (max-width: 992px) {
             .products-grid {
@@ -554,6 +593,11 @@ try {
             
             .hero-content h1 {
                 font-size: 2rem;
+            }
+            
+            /* Mostrar navegación inferior en móviles */
+            .mobile-bottom-nav {
+                display: block;
             }
         }
         
@@ -685,7 +729,7 @@ try {
                 <div class="category-icon">
                     <i class="fas fa-gem"></i>
                 </div>
-                <div class="category-name">Accesorios</div>
+                <div class="category-name">Dijes</div>
             </a>
             
             <a href="#" class="category-card">
@@ -838,6 +882,32 @@ try {
         </div>
     </footer>
 
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav">
+        <div class="mobile-nav-items">
+            <a href="index.php" class="mobile-nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="categorias.php" class="mobile-nav-item">
+                <i class="fas fa-th-large"></i>
+                <span>Categorías</span>
+            </a>
+            <a href="dijes.php" class="mobile-nav-item">
+                <i class="fas fa-gem"></i>
+                <span>Dijes</span>
+            </a>
+            <a href="carrito.php" class="mobile-nav-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Carrito</span>
+            </a>
+            <a href="login.php" class="mobile-nav-item">
+                <i class="fas fa-user"></i>
+                <span>Login</span>
+            </a>
+        </div>
+    </nav>
+
     <script>
         // Mobile menu toggle
         document.querySelector('.mobile-menu-toggle').addEventListener('click', function() {
@@ -866,6 +936,16 @@ try {
                     icon.classList.add('far');
                     icon.style.color = '';
                 }
+            });
+        });
+        
+        // Mobile bottom nav active state
+        document.querySelectorAll('.mobile-nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.mobile-nav-item').forEach(i => {
+                    i.classList.remove('active');
+                });
+                this.classList.add('active');
             });
         });
     </script>
