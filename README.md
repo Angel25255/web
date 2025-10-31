@@ -1,15 +1,3 @@
-<?php
-// Ocultar TODO el código PHP
-ob_start();
-error_reporting(0);
-ini_set('display_errors', 0);
-
-// Cargar datos sin mostrar nada
-require_once 'php/cargar_datos.php';
-
-// Limpiar cualquier salida
-ob_clean();
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -798,36 +786,10 @@ ob_clean();
             </div>
             
             <div class="products-grid">
-                <?php if (empty($novedades)): ?>
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
-                        <p>No hay productos disponibles</p>
-                    </div>
-                <?php else: ?>
-                    <?php foreach ($novedades as $producto): ?>
-                        <div class="product-card">
-                            <?php if (!empty($producto['imagen_base64'])): ?>
-                                <img src="<?php echo $producto['imagen_base64']; ?>" 
-                                     alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
-                                     class="product-image">
-                            <?php else: ?>
-                                <div class="product-image" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #7f8c8d;">
-                                    <i class="fas fa-image fa-2x"></i>
-                                </div>
-                            <?php endif; ?>
-                            <div class="product-info">
-                                <h3 class="product-name"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                                <div class="product-price">S/ <?php echo number_format($producto['precio'], 2); ?></div>
-                                <?php if ($producto['precio'] > 50): ?>
-                                    <div class="product-old-price">S/ <?php echo number_format($producto['precio'] * 1.2, 2); ?></div>
-                                <?php endif; ?>
-                                <div class="product-actions">
-                                    <button class="add-to-cart">Añadir</button>
-                                    <button class="wishlist"><i class="far fa-heart"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
+                <!-- Los productos se cargarán automáticamente desde PHP -->
+                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+                    <p>Productos cargándose...</p>
+                </div>
             </div>
         </div>
     </div>
@@ -840,36 +802,10 @@ ob_clean();
         </div>
         
         <div class="products-grid">
-            <?php if (empty($productos_destacados)): ?>
-                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
-                    <p>No hay productos destacados</p>
-                </div>
-            <?php else: ?>
-                <?php foreach ($productos_destacados as $producto): ?>
-                    <div class="product-card">
-                        <?php if (!empty($producto['imagen_base64'])): ?>
-                            <img src="<?php echo $producto['imagen_base64']; ?>" 
-                                 alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
-                                 class="product-image">
-                        <?php else: ?>
-                            <div class="product-image" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #7f8c8d;">
-                                <i class="fas fa-image fa-2x"></i>
-                            </div>
-                        <?php endif; ?>
-                        <div class="product-info">
-                            <h3 class="product-name"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                            <div class="product-price">S/ <?php echo number_format($producto['precio'], 2); ?></div>
-                            <?php if ($producto['precio'] > 50): ?>
-                                <div class="product-old-price">S/ <?php echo number_format($producto['precio'] * 1.2, 2); ?></div>
-                            <?php endif; ?>
-                            <div class="product-actions">
-                                <button class="add-to-cart">Añadir</button>
-                                <button class="wishlist"><i class="far fa-heart"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            <!-- Los productos destacados se cargarán automáticamente desde PHP -->
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
+                <p>Productos destacados cargándose...</p>
+            </div>
         </div>
     </div>
 
