@@ -99,7 +99,7 @@ try {
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 15px;
         }
         
         .top-bar-links a {
@@ -114,7 +114,7 @@ try {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 20px;
+            padding: 15px;
         }
         
         .logo {
@@ -189,7 +189,7 @@ try {
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
-            padding: 0 20px;
+            padding: 0 15px;
         }
         
         .main-nav-links {
@@ -236,34 +236,46 @@ try {
             font-size: 14px;
         }
         
-        /* Hero Banner */
+        /* Hero Banner - CORREGIDO */
         .hero-banner {
             position: relative;
             height: 400px;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
-            background-size: cover;
-            background-position: center;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4));
             color: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             margin-bottom: 30px;
+            overflow: hidden;
+        }
+        
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
         
         .hero-content {
             max-width: 600px;
             padding: 0 20px;
+            z-index: 1;
         }
         
         .hero-content h1 {
             font-size: 2.5rem;
             margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
         }
         
         .hero-content p {
             font-size: 1.2rem;
             margin-bottom: 25px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         
         .btn {
@@ -286,7 +298,7 @@ try {
         .section {
             max-width: 1200px;
             margin: 0 auto 40px;
-            padding: 0 20px;
+            padding: 0 15px;
         }
         
         .section-header {
@@ -370,7 +382,7 @@ try {
         .products-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            gap: 15px;
         }
         
         .product-card {
@@ -388,7 +400,9 @@ try {
         .product-image {
             width: 100%;
             height: 250px;
-            object-fit: cover;
+            object-fit: contain;
+            background: #f8f9fa;
+            padding: 10px;
         }
         
         .product-info {
@@ -461,7 +475,7 @@ try {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 30px;
-            padding: 0 20px;
+            padding: 0 15px;
         }
         
         .footer-column h3 {
@@ -492,7 +506,7 @@ try {
         .footer-bottom {
             max-width: 1200px;
             margin: 40px auto 0;
-            padding: 20px;
+            padding: 20px 15px;
             border-top: 1px solid #444;
             text-align: center;
             font-size: 14px;
@@ -560,6 +574,10 @@ try {
             .footer-content {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .hero-banner {
+                height: 350px;
+            }
         }
         
         @media (max-width: 768px) {
@@ -581,23 +599,45 @@ try {
             
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .categories-grid {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             
             .hero-banner {
                 height: 300px;
+                margin: 0 0 20px 0;
             }
             
             .hero-content h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+            }
+            
+            .hero-content p {
+                font-size: 1rem;
+            }
+            
+            .section {
+                padding: 0 10px;
+                margin-bottom: 30px;
             }
             
             /* Mostrar navegación inferior en móviles */
             .mobile-bottom-nav {
                 display: block;
+            }
+            
+            /* Eliminar espacios en móvil */
+            .top-bar-content,
+            .nav,
+            .main-nav-content,
+            .footer-content,
+            .footer-bottom {
+                padding-left: 10px;
+                padding-right: 10px;
             }
         }
         
@@ -608,6 +648,7 @@ try {
             
             .footer-content {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
             
             .top-bar-content {
@@ -617,6 +658,48 @@ try {
             
             .top-bar-links {
                 margin-top: 5px;
+            }
+            
+            .hero-banner {
+                height: 250px;
+            }
+            
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+            
+            .hero-content p {
+                font-size: 0.9rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .section-title {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .categories-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            
+            .category-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+            }
+            
+            .category-name {
+                font-size: 12px;
+            }
+            
+            .product-image {
+                height: 200px;
             }
         }
     </style>
@@ -687,8 +770,10 @@ try {
         </div>
     </header>
 
-    <!-- Hero Banner -->
+    <!-- Hero Banner CORREGIDO -->
     <div class="hero-banner">
+        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
+             alt="Moda Store" class="hero-background">
         <div class="hero-content">
             <h1>Nueva Colección 2024</h1>
             <p>Descubre las últimas tendencias en moda con estilo y calidad</p>
