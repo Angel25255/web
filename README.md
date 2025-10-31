@@ -1,8 +1,43 @@
+<?php
+// categorias.php - Página de categorías
+require_once 'php/conexion.php';
+
+// Obtener todas las categorías activas
+$sql_categorias = "SELECT * FROM categorias WHERE activo = 1 ORDER BY nombre";
+$stmt_categorias = $conexion->prepare($sql_categorias);
+$stmt_categorias->execute();
+$categorias = $stmt_categorias->fetchAll(PDO::FETCH_ASSOC);
+
+// Obtener productos por categoría si se selecciona una
+$productos_categoria = [];
+$categoria_actual = null;
+
+if (isset($_GET['categoria_id'])) {
+    $categoria_id = $_GET['categoria_id'];
+    
+    // Obtener información de la categoría actual
+    $sql_categoria_actual = "SELECT * FROM categorias WHERE id = ?";
+    $stmt_categoria_actual = $conexion->prepare($sql_categoria_actual);
+    $stmt_categoria_actual->execute([$categoria_id]);
+    $categoria_actual = $stmt_categoria_actual->fetch(PDO::FETCH_ASSOC);
+    
+    // Obtener productos de la categoría
+    $sql_productos = "SELECT p.*, c.nombre as categoria_nombre 
+                     FROM productos p 
+                     LEFT JOIN categorias c ON p.categoria_id = c.id 
+                     WHERE p.categoria_id = ? AND p.activo = 1 
+                     ORDER BY p.id DESC";
+    $stmt_productos = $conexion->prepare($sql_productos);
+    $stmt_productos->execute([$categoria_id]);
+    $productos_categoria = $stmt_productos->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ModaStore - Tienda de Moda Online</title>
+    <title>Categorías - ModaStore</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -31,7 +66,7 @@
             padding-bottom: 70px;
         }
         
-        /* Header Styles */
+        /* Header Styles (igual que index.php) */
         .header {
             background: var(--white);
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -189,153 +224,124 @@
             font-size: 14px;
         }
         
-        /* Hero Banner */
-        .hero-banner {
-            position: relative;
-            height: 400px;
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4));
-            color: var(--white);
+        /* Categories Page Styles */
+        .categories-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 15px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+        
+        .page-subtitle {
+            color: var(--gray-color);
+            font-size: 1.1rem;
+        }
+        
+        .categories-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        /* Categories Sidebar */
+        .categories-sidebar {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .categories-list {
+            list-style: none;
+        }
+        
+        .category-item {
+            margin-bottom: 12px;
+        }
+        
+        .category-link {
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin-bottom: 30px;
-            overflow: hidden;
-        }
-        
-        .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-        }
-        
-        .hero-content {
-            max-width: 600px;
-            padding: 0 20px;
-            z-index: 1;
-        }
-        
-        .hero-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-        
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 25px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-        
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background: var(--primary-color);
-            color: var(--white);
+            padding: 12px 15px;
             text-decoration: none;
-            border-radius: 30px;
-            font-weight: 600;
+            color: var(--dark-color);
+            border-radius: var(--border-radius);
             transition: all 0.3s;
         }
         
-        .btn:hover {
-            background: var(--secondary-color);
-            transform: translateY(-2px);
+        .category-link:hover {
+            background: var(--light-color);
+            color: var(--primary-color);
         }
         
-        /* Categories Section */
-        .section {
-            max-width: 1200px;
-            margin: 0 auto 40px;
-            padding: 0 15px;
+        .category-link.active {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+        
+        .category-icon {
+            width: 30px;
+            height: 30px;
+            background: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+        
+        .category-link.active .category-icon {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        /* Products Grid */
+        .products-section {
+            flex: 1;
         }
         
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-        
-        .view-all {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 15px;
-        }
-        
-        .category-card {
-            text-align: center;
-            text-decoration: none;
+            font-size: 1.8rem;
             color: var(--dark-color);
-            transition: transform 0.3s;
         }
         
-        .category-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .category-icon {
-            width: 70px;
-            height: 70px;
-            background: var(--light-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            font-size: 24px;
-            color: var(--primary-color);
-        }
-        
-        .category-name {
-            font-size: 14px;
-            font-weight: 500;
-        }
-        
-        /* Trends Section */
-        .trends-section {
-            background: var(--light-color);
-            padding: 40px 0;
-            margin-bottom: 40px;
-        }
-        
-        .trends-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .trends-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--dark-color);
-            margin-bottom: 10px;
-        }
-        
-        .trends-subtitle {
+        .products-count {
             color: var(--gray-color);
-            font-size: 1rem;
+            font-size: 14px;
         }
         
-        /* Products Grid */
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
         }
         
         .product-card {
@@ -355,32 +361,40 @@
             height: 250px;
             object-fit: contain;
             background: #f8f9fa;
-            padding: 10px;
-        }
-        
-        .product-info {
             padding: 15px;
         }
         
+        .product-info {
+            padding: 20px;
+        }
+        
         .product-name {
-            font-size: 14px;
-            margin-bottom: 8px;
-            height: 40px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            height: 45px;
             overflow: hidden;
+            font-weight: 600;
+        }
+        
+        .product-category {
+            color: var(--gray-color);
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
         }
         
         .product-price {
             font-weight: 700;
             color: var(--primary-color);
-            font-size: 16px;
+            font-size: 18px;
             margin-bottom: 5px;
         }
         
         .product-old-price {
             color: var(--gray-color);
             text-decoration: line-through;
-            font-size: 12px;
-            margin-bottom: 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
         
         .product-actions {
@@ -392,11 +406,13 @@
             background: var(--primary-color);
             color: var(--white);
             border: none;
-            padding: 8px 15px;
+            padding: 10px 20px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 14px;
             cursor: pointer;
             transition: background 0.3s;
+            flex: 1;
+            margin-right: 10px;
         }
         
         .add-to-cart:hover {
@@ -405,14 +421,36 @@
         
         .wishlist {
             background: none;
-            border: none;
+            border: 1px solid var(--border-color);
             color: var(--gray-color);
             cursor: pointer;
             font-size: 16px;
+            width: 45px;
+            border-radius: 4px;
+            transition: all 0.3s;
         }
         
         .wishlist:hover {
             color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-color);
+        }
+        
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--border-color);
+        }
+        
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
         
         /* Footer */
@@ -420,6 +458,7 @@
             background: var(--dark-color);
             color: var(--white);
             padding: 50px 0 20px;
+            margin-top: 60px;
         }
         
         .footer-content {
@@ -466,16 +505,6 @@
             color: #aaa;
         }
         
-        /* Mobile Menu */
-        .mobile-menu-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--dark-color);
-            cursor: pointer;
-        }
-        
         /* Mobile Bottom Navigation */
         .mobile-bottom-nav {
             display: none;
@@ -516,20 +545,17 @@
         
         /* Responsive Styles */
         @media (max-width: 992px) {
+            .categories-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .categories-sidebar {
+                position: static;
+                margin-bottom: 30px;
+            }
+            
             .products-grid {
                 grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .categories-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .hero-banner {
-                height: 350px;
             }
         }
         
@@ -546,39 +572,14 @@
                 display: none;
             }
             
-            .mobile-menu-toggle {
-                display: block;
-            }
-            
             .products-grid {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
             }
             
-            .categories-grid {
+            .footer-content {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
             }
             
-            .hero-banner {
-                height: 300px;
-                margin: 0 0 20px 0;
-            }
-            
-            .hero-content h1 {
-                font-size: 1.8rem;
-            }
-            
-            .hero-content p {
-                font-size: 1rem;
-            }
-            
-            .section {
-                padding: 0 10px;
-                margin-bottom: 30px;
-            }
-            
-            /* Mostrar navegación inferior en móviles */
             .mobile-bottom-nav {
                 display: block;
             }
@@ -591,58 +592,10 @@
             
             .footer-content {
                 grid-template-columns: 1fr;
-                gap: 20px;
             }
             
-            .top-bar-content {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .top-bar-links {
-                margin-top: 5px;
-            }
-            
-            .hero-banner {
-                height: 250px;
-            }
-            
-            .hero-content h1 {
-                font-size: 1.5rem;
-            }
-            
-            .hero-content p {
-                font-size: 0.9rem;
-            }
-            
-            .btn {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
-            
-            .section-title {
-                font-size: 1.3rem;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .categories-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-            
-            .category-icon {
-                width: 60px;
-                height: 60px;
-                font-size: 20px;
-            }
-            
-            .category-name {
-                font-size: 12px;
-            }
-            
-            .product-image {
-                height: 200px;
+            .page-title {
+                font-size: 2rem;
             }
         }
     </style>
@@ -697,8 +650,8 @@
         <div class="main-nav">
             <div class="main-nav-content">
                 <ul class="main-nav-links">
-                    <li><a href="index.php" class="active">Inicio</a></li>
-                    <li><a href="categorias.php">Categorías</a></li>
+                    <li><a href="index.php">Inicio</a></li>
+                    <li><a href="categorias.php" class="active">Categorías</a></li>
                     <li><a href="productos.php">Productos</a></li>
                     <li><a href="#">Novedades</a></li>
                     <li><a href="#">Ofertas</a></li>
@@ -713,97 +666,82 @@
         </div>
     </header>
 
-    <!-- Hero Banner -->
-    <div class="hero-banner">
-        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" 
-             alt="Moda Store" class="hero-background">
-        <div class="hero-content">
-            <h1>Nueva Colección 2024</h1>
-            <p>Descubre las últimas tendencias en moda con estilo y calidad</p>
-            <a href="productos.php" class="btn">Comprar Ahora</a>
-        </div>
-    </div>
-
-    <!-- Categories Section -->
-    <div class="section">
-        <div class="section-header">
-            <h2 class="section-title">Categorías</h2>
-            <a href="categorias.php" class="view-all">Ver todas</a>
+    <!-- Categories Page Content -->
+    <div class="categories-page">
+        <div class="page-header">
+            <h1 class="page-title">Nuestras Categorías</h1>
+            <p class="page-subtitle">Descubre productos organizados por categorías</p>
         </div>
         
-        <div class="categories-grid">
-            <a href="#" class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-female"></i>
-                </div>
-                <div class="category-name">Mujer</div>
-            </a>
-            
-            <a href="#" class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-male"></i>
-                </div>
-                <div class="category-name">Hombre</div>
-            </a>
-            
-            <a href="#" class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-child"></i>
-                </div>
-                <div class="category-name">Niños</div>
-            </a>
-            
-            <a href="#" class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-gem"></i>
-                </div>
-                <div class="category-name">Dijes</div>
-            </a>
-            
-            <a href="#" class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-shoe-prints"></i>
-                </div>
-                <div class="category-name">Zapatos</div>
-            </a>
-            
-            <a href="#" class="category-card">
-                <div class="category-icon">
-                    <i class="fas fa-home"></i>
-                </div>
-                <div class="category-name">Hogar</div>
-            </a>
-        </div>
-    </div>
-
-    <!-- Trends Section -->
-    <div class="trends-section">
-        <div class="section">
-            <div class="trends-header">
-                <h2 class="trends-title">Tendencias</h2>
-                <p class="trends-subtitle">Descubre lo que está de moda esta temporada</p>
+        <div class="categories-container">
+            <!-- Categories Sidebar -->
+            <div class="categories-sidebar">
+                <h2 class="sidebar-title">Todas las Categorías</h2>
+                <ul class="categories-list">
+                    <?php foreach ($categorias as $categoria): ?>
+                        <li class="category-item">
+                            <a href="categorias.php?categoria_id=<?php echo $categoria['id']; ?>" 
+                               class="category-link <?php echo ($categoria_actual && $categoria_actual['id'] == $categoria['id']) ? 'active' : ''; ?>">
+                                <div class="category-icon">
+                                    <i class="fas fa-tag"></i>
+                                </div>
+                                <?php echo htmlspecialchars($categoria['nombre']); ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
             
-            <div class="products-grid">
-                <!-- Los productos se cargarán automáticamente desde PHP -->
-                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
-                    <p>Productos cargándose...</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Productos Destacados -->
-    <div class="section">
-        <div class="section-header">
-            <h2 class="section-title">Productos Destacados</h2>
-            <a href="productos.php" class="view-all">Ver todos</a>
-        </div>
-        
-        <div class="products-grid">
-            <!-- Los productos destacados se cargarán automáticamente desde PHP -->
-            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #666;">
-                <p>Productos destacados cargándose...</p>
+            <!-- Products Section -->
+            <div class="products-section">
+                <?php if ($categoria_actual): ?>
+                    <div class="section-header">
+                        <h2 class="section-title"><?php echo htmlspecialchars($categoria_actual['nombre']); ?></h2>
+                        <span class="products-count"><?php echo count($productos_categoria); ?> productos</span>
+                    </div>
+                    
+                    <?php if (empty($productos_categoria)): ?>
+                        <div class="empty-state">
+                            <i class="fas fa-box-open"></i>
+                            <h3>No hay productos en esta categoría</h3>
+                            <p>Pronto agregaremos nuevos productos.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="products-grid">
+                            <?php foreach ($productos_categoria as $producto): ?>
+                                <div class="product-card">
+                                    <?php if (!empty($producto['imagen_base64'])): ?>
+                                        <img src="<?php echo $producto['imagen_base64']; ?>" 
+                                             alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
+                                             class="product-image">
+                                    <?php else: ?>
+                                        <div class="product-image" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #7f8c8d;">
+                                            <i class="fas fa-image fa-2x"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="product-info">
+                                        <div class="product-category"><?php echo htmlspecialchars($producto['categoria_nombre']); ?></div>
+                                        <h3 class="product-name"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
+                                        <div class="product-price">S/ <?php echo number_format($producto['precio'], 2); ?></div>
+                                        <?php if ($producto['precio'] > 50): ?>
+                                            <div class="product-old-price">S/ <?php echo number_format($producto['precio'] * 1.2, 2); ?></div>
+                                        <?php endif; ?>
+                                        <div class="product-actions">
+                                            <button class="add-to-cart">Añadir al Carrito</button>
+                                            <button class="wishlist"><i class="far fa-heart"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <i class="fas fa-tags"></i>
+                        <h3>Selecciona una categoría</h3>
+                        <p>Elige una categoría del menú lateral para ver sus productos.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -861,11 +799,11 @@
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav">
         <div class="mobile-nav-items">
-            <a href="index.php" class="mobile-nav-item active">
+            <a href="index.php" class="mobile-nav-item">
                 <i class="fas fa-home"></i>
                 <span>Inicio</span>
             </a>
-            <a href="categorias.php" class="mobile-nav-item">
+            <a href="categorias.php" class="mobile-nav-item active">
                 <i class="fas fa-th-large"></i>
                 <span>Categorías</span>
             </a>
