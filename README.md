@@ -122,6 +122,21 @@
             text-align: center;
         }
 
+        .category-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .products-count {
+            font-size: 14px;
+            color: #777;
+            font-weight: normal;
+        }
+
         .products-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -161,6 +176,19 @@
         .product-price {
             font-weight: bold;
             color: #ff4747;
+        }
+
+        /* Estados de carga y vacío */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        .no-products {
+            text-align: center;
+            padding: 40px;
+            color: #777;
         }
 
         /* Responsive para móviles */
@@ -223,45 +251,45 @@
     <div class="categories-panel">
         <h2>Categorías</h2>
         <ul>
-            <li class="active">Todo</li>
-            <li>Mujer</li>
-            <li>Curvy</li>
-            <li>Niños</li>
-            <li>Hombre</li>
-            <li>Hogar</li>
+            <li class="active" data-category="all">Todo</li>
+            <li data-category="mujer">Mujer</li>
+            <li data-category="curvy">Curvy</li>
+            <li data-category="ninos">Niños</li>
+            <li data-category="hombre">Hombre</li>
+            <li data-category="hogar">Hogar</li>
         </ul>
 
         <h2 style="margin-top: 30px;">Solo para ti</h2>
         <ul>
-            <li>Selección para ti</li>
-            <li>Novedades</li>
-            <li>Ofertas</li>
-            <li>Ropa de mujer</li>
-            <li>Sudadera con Capucha para Hombre</li>
-            <li>Camisetas de hombre</li>
-            <li>Conjuntos de sudadera</li>
-            <li>Trajes de baño</li>
-            <li>Curvy</li>
-            <li>Niños</li>
-            <li>Tops de Punto para Hombre</li>
-            <li>Camisetas de Niñas (3-7)</li>
-            <li>Conjuntos de Camiseta para Hombre</li>
-            <li>Ropa para hombre</li>
-            <li>Ropa interior y ropa para dormir</li>
-            <li>Bisutería y accesorios</li>
-            <li>Sudadera para hombre</li>
-            <li>Shorts deportivos para hombre</li>
-            <li>Bodies bebé recién nacido</li>
-            <li>Zapatos</li>
-            <li>Hogar y cocina</li>
-            <li>Deportes y aire libre</li>
-            <li>Bebé y maternidad</li>
-            <li>Sets de Brochas</li>
-            <li>Pantalones para hombre</li>
-            <li>Fundas básicas para móviles</li>
-            <li>Bolsas y equipaje</li>
-            <li>Belleza y salud</li>
-            <li>También podría gustarte</li>
+            <li data-category="seleccion">Selección para ti</li>
+            <li data-category="novedades">Novedades</li>
+            <li data-category="ofertas">Ofertas</li>
+            <li data-category="ropa-mujer">Ropa de mujer</li>
+            <li data-category="sudaderas-hombre">Sudadera con Capucha para Hombre</li>
+            <li data-category="camisetas-hombre">Camisetas de hombre</li>
+            <li data-category="conjuntos">Conjuntos de sudadera</li>
+            <li data-category="trajes-bano">Trajes de baño</li>
+            <li data-category="curvy">Curvy</li>
+            <li data-category="ninos">Niños</li>
+            <li data-category="tops-hombre">Tops de Punto para Hombre</li>
+            <li data-category="camisetas-ninas">Camisetas de Niñas (3-7)</li>
+            <li data-category="conjuntos-camiseta">Conjuntos de Camiseta para Hombre</li>
+            <li data-category="ropa-hombre">Ropa para hombre</li>
+            <li data-category="ropa-interior">Ropa interior y ropa para dormir</li>
+            <li data-category="bisuteria">Bisutería y accesorios</li>
+            <li data-category="sudaderas">Sudadera para hombre</li>
+            <li data-category="shorts-deportivos">Shorts deportivos para hombre</li>
+            <li data-category="bodies-bebe">Bodies bebé recién nacido</li>
+            <li data-category="zapatos">Zapatos</li>
+            <li data-category="hogar-cocina">Hogar y cocina</li>
+            <li data-category="deportes">Deportes y aire libre</li>
+            <li data-category="bebe-maternidad">Bebé y maternidad</li>
+            <li data-category="brochas">Sets de Brochas</li>
+            <li data-category="pantalones-hombre">Pantalones para hombre</li>
+            <li data-category="fundas-moviles">Fundas básicas para móviles</li>
+            <li data-category="bolsas">Bolsas y equipaje</li>
+            <li data-category="belleza">Belleza y salud</li>
+            <li data-category="gustarte">También podría gustarte</li>
         </ul>
     </div>
 
@@ -284,67 +312,113 @@
             <h3>¡Ofertas especiales! Hasta 70% de descuento</h3>
         </div>
 
-        <div class="products-grid">
-            <!-- Producto 1 -->
-            <div class="product-card">
-                <div class="product-image">Imagen del producto</div>
-                <div class="product-info">
-                    <div class="product-title">Vestido floral verano</div>
-                    <div class="product-price">$24.99</div>
-                </div>
-            </div>
+        <div class="category-title">
+            <span>Productos destacados</span>
+            <span class="products-count">6 productos</span>
+        </div>
 
-            <!-- Producto 2 -->
-            <div class="product-card">
-                <div class="product-image">Imagen del producto</div>
-                <div class="product-info">
-                    <div class="product-title">Jeans ajustados</div>
-                    <div class="product-price">$29.99</div>
-                </div>
-            </div>
-
-            <!-- Producto 3 -->
-            <div class="product-card">
-                <div class="product-image">Imagen del producto</div>
-                <div class="product-info">
-                    <div class="product-title">Camiseta básica</div>
-                    <div class="product-price">$12.99</div>
-                </div>
-            </div>
-
-            <!-- Producto 4 -->
-            <div class="product-card">
-                <div class="product-image">Imagen del producto</div>
-                <div class="product-info">
-                    <div class="product-title">Falda plisada</div>
-                    <div class="product-price">$19.99</div>
-                </div>
-            </div>
-
-            <!-- Producto 5 -->
-            <div class="product-card">
-                <div class="product-image">Imagen del producto</div>
-                <div class="product-info">
-                    <div class="product-title">Sudadera con capucha</div>
-                    <div class="product-price">$34.99</div>
-                </div>
-            </div>
-
-            <!-- Producto 6 -->
-            <div class="product-card">
-                <div class="product-image">Imagen del producto</div>
-                <div class="product-info">
-                    <div class="product-title">Zapatos deportivos</div>
-                    <div class="product-price">$45.99</div>
-                </div>
-            </div>
+        <div class="products-grid" id="products-container">
+            <!-- Los productos se cargarán dinámicamente aquí -->
         </div>
     </div>
 
     <script>
+        // Base de datos simulada de productos
+        const productos = {
+            all: [
+                { id: 1, nombre: "Vestido floral verano", precio: "$24.99", categoria: "mujer" },
+                { id: 2, nombre: "Jeans ajustados", precio: "$29.99", categoria: "mujer" },
+                { id: 3, nombre: "Camiseta básica", precio: "$12.99", categoria: "hombre" },
+                { id: 4, nombre: "Falda plisada", precio: "$19.99", categoria: "mujer" },
+                { id: 5, nombre: "Sudadera con capucha", precio: "$34.99", categoria: "hombre" },
+                { id: 6, nombre: "Zapatos deportivos", precio: "$45.99", categoria: "zapatos" }
+            ],
+            mujer: [
+                { id: 1, nombre: "Vestido floral verano", precio: "$24.99", categoria: "mujer" },
+                { id: 2, nombre: "Jeans ajustados", precio: "$29.99", categoria: "mujer" },
+                { id: 4, nombre: "Falda plisada", precio: "$19.99", categoria: "mujer" },
+                { id: 7, nombre: "Blusa de seda", precio: "$22.99", categoria: "mujer" },
+                { id: 8, nombre: "Abrigo invernal", precio: "$59.99", categoria: "mujer" }
+            ],
+            curvy: [
+                { id: 9, nombre: "Vestido curvy estampado", precio: "$27.99", categoria: "curvy" },
+                { id: 10, nombre: "Jeans curvy ajustados", precio: "$32.99", categoria: "curvy" },
+                { id: 11, nombre: "Top curvy verano", precio: "$18.99", categoria: "curvy" }
+            ],
+            ninos: [
+                { id: 12, nombre: "Conjunto infantil dinosaurio", precio: "$19.99", categoria: "ninos" },
+                { id: 13, nombre: "Vestido niña flores", precio: "$15.99", categoria: "ninos" },
+                { id: 14, nombre: "Pijama niño superhéroe", precio: "$16.99", categoria: "ninos" }
+            ],
+            hombre: [
+                { id: 3, nombre: "Camiseta básica", precio: "$12.99", categoria: "hombre" },
+                { id: 5, nombre: "Sudadera con capucha", precio: "$34.99", categoria: "hombre" },
+                { id: 15, nombre: "Pantalón cargo hombre", precio: "$39.99", categoria: "hombre" },
+                { id: 16, nombre: "Camisa formal hombre", precio: "$29.99", categoria: "hombre" }
+            ],
+            hogar: [
+                { id: 17, nombre: "Juego de sábanas", precio: "$34.99", categoria: "hogar" },
+                { id: 18, nombre: "Cojines decorativos", precio: "$12.99", categoria: "hogar" },
+                { id: 19, nombre: "Manta polar", precio: "$24.99", categoria: "hogar" }
+            ],
+            ofertas: [
+                { id: 20, nombre: "Chaqueta oferta especial", precio: "$19.99", categoria: "ofertas" },
+                { id: 21, nombre: "Zapatillas deportivas", precio: "$29.99", categoria: "ofertas" }
+            ],
+            zapatos: [
+                { id: 6, nombre: "Zapatos deportivos", precio: "$45.99", categoria: "zapatos" },
+                { id: 22, nombre: "Sandalias verano", precio: "$22.99", categoria: "zapatos" },
+                { id: 23, nombre: "Botas invierno", precio: "$59.99", categoria: "zapatos" }
+            ]
+        };
+
+        // Función para cargar productos según la categoría seleccionada
+        function cargarProductos(categoria) {
+            const container = document.getElementById('products-container');
+            const categoryTitle = document.querySelector('.category-title span:first-child');
+            const productsCount = document.querySelector('.products-count');
+            
+            // Mostrar estado de carga
+            container.innerHTML = '<div class="loading">Cargando productos...</div>';
+            
+            // Simular tiempo de carga
+            setTimeout(() => {
+                const productosCategoria = productos[categoria] || productos.all;
+                
+                if (productosCategoria.length === 0) {
+                    container.innerHTML = '<div class="no-products">No hay productos en esta categoría</div>';
+                    productsCount.textContent = '0 productos';
+                    return;
+                }
+                
+                // Actualizar título y contador
+                categoryTitle.textContent = categoria === 'all' ? 'Productos destacados' : `Categoría: ${categoria}`;
+                productsCount.textContent = `${productosCategoria.length} productos`;
+                
+                // Generar HTML de productos
+                let html = '';
+                productosCategoria.forEach(producto => {
+                    html += `
+                        <div class="product-card">
+                            <div class="product-image">Imagen del producto</div>
+                            <div class="product-info">
+                                <div class="product-title">${producto.nombre}</div>
+                                <div class="product-price">${producto.precio}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }, 500); // Simular tiempo de carga de 500ms
+        }
+
         // JavaScript para manejar la selección de categorías
         document.addEventListener('DOMContentLoaded', function() {
             const categoryItems = document.querySelectorAll('.categories-panel li');
+            
+            // Cargar productos iniciales
+            cargarProductos('all');
             
             categoryItems.forEach(item => {
                 item.addEventListener('click', function() {
@@ -352,6 +426,12 @@
                     categoryItems.forEach(i => i.classList.remove('active'));
                     // Agregar clase activa al elemento clickeado
                     this.classList.add('active');
+                    
+                    // Obtener la categoría del atributo data-category
+                    const categoria = this.getAttribute('data-category');
+                    
+                    // Cargar productos de la categoría seleccionada
+                    cargarProductos(categoria);
                 });
             });
         });
