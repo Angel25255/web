@@ -1,4 +1,15 @@
-<?php require_once 'php/cargar_datos.php'; ?>
+<?php
+// Ocultar TODO el código PHP
+ob_start();
+error_reporting(0);
+ini_set('display_errors', 0);
+
+// Cargar datos sin mostrar nada
+require_once 'php/cargar_datos.php';
+
+// Limpiar cualquier salida
+ob_clean();
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
